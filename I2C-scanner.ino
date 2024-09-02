@@ -25,6 +25,9 @@ String memorySequence[10]; // Armazena a sequência de operações para o Modo M
 int memoryIndex = 0; // Índice para a sequência de memória
 
 void setup() {
+  Serial.begin(9600); // Inicializa o Serial Console
+  Serial.println("Iniciando sistema...");
+
   // Configuração dos pinos dos botões
   pinMode(btnNextMode, INPUT_PULLUP);
   pinMode(btnSelectMode, INPUT_PULLUP);
@@ -42,6 +45,7 @@ void setup() {
   lcd2.clear();
   lcd2.setCursor(0, 0);
   lcd2.print("Score: 0");
+  Serial.println("Modo inicial: Arcade");
 }
 
 void loop() {
@@ -66,12 +70,15 @@ void changeMode() {
   switch (currentMode) {
     case 0:
       lcd1.print("Modo: Arcade");
+      Serial.println("Modo alterado para: Arcade");
       break;
     case 1:
       lcd1.print("Modo: Timer");
+      Serial.println("Modo alterado para: Timer");
       break;
     case 2:
       lcd1.print("Modo: Memoria");
+      Serial.println("Modo alterado para: Memoria");
       break;
   }
 }
@@ -99,6 +106,7 @@ void startArcadeMode() {
   lcd1.clear();
   lcd2.clear();
   lcd1.print("Arcade Mode");
+  Serial.println("Iniciando Modo Arcade");
   delay(1000);
   nextQuestion();
 }
@@ -142,6 +150,12 @@ void nextQuestion() {
   lcd1.print(num2); 
   lcd1.setCursor(0, 1);
   lcd1.print("Resp: ");
+  Serial.print("Nova operação: ");
+  Serial.print(num1);
+  Serial.print(" ");
+  Serial.print(operation);
+  Serial.print(" ");
+  Serial.println(num2);
   input = ""; // Reseta a entrada do usuário
 
   waitForInput();
@@ -153,18 +167,23 @@ void waitForInput() {
       input += "0";
       lcd1.setCursor(6, 1);
       lcd1.print(input);
+      Serial.print("Entrada: ");
+      Serial.println(input);
       delay(300);
     }
     if (digitalRead(btnOne) == LOW) {
       input += "1";
       lcd1.setCursor(6, 1);
       lcd1.print(input);
+      Serial.print("Entrada: ");
+      Serial.println(input);
       delay(300);
     }
     if (digitalRead(btnClear) == LOW) {
       input = "";
       lcd1.setCursor(6, 1);
       lcd1.print("    ");  // Limpa a área da resposta
+      Serial.println("Entrada limpa");
       delay(300);
     }
     if (digitalRead(btnSubmit) == LOW) {
@@ -182,16 +201,20 @@ void waitForInput() {
 
 void checkAnswer() {
   int userAnswer = strtol(input.c_str(), NULL, 2);  // Converte a entrada binária para um número inteiro
+  Serial.print("Resposta do usuário: ");
+  Serial.println(userAnswer);
   if (userAnswer == correctAnswer) {
     score += 10;  // Incrementa a pontuação
     level++;      // Aumenta o nível
     lcd1.clear();
     lcd1.print("Correto!");
+    Serial.println("Resposta correta!");
     delay(1000);
   } else {
     score -= 10;  // Diminui a pontuação
     lcd1.clear();
     lcd1.print("Errado!");
+    Serial.println("Resposta errada!");
     delay(1000);
   }
   updateScore();
@@ -203,18 +226,22 @@ void updateScore() {
   lcd2.setCursor(0, 0);
   lcd2.print("Score: ");
   lcd2.print(score);
+  Serial.print("Pontuação atual: ");
+  Serial.println(score);
 }
 
 void endGame() {
   lcd1.clear();
   lcd2.clear();
   lcd1.print("Jogo Encerrado");
+  Serial.println("Jogo Encerrado");
   delay(2000); // Exibe mensagem por 2 segundos
   lcd1.clear();
-  lcd1.print("Modo: Arcade");
+  lcd1.print("Modo: Arcade"); // Volta ao modo inicial ou outro estado padrão
   lcd2.setCursor(0, 0);
   lcd2.print("Score: 0");
   score = 0; // Reseta a pontuação
+  currentMode = 0; // Reseta o modo de jogo para o modo padrão (Arcade)
 }
 
 // Implementação do Modo Timer
@@ -228,13 +255,16 @@ void startTimerMode() {
   lcd1.print("Tempo: ");
   lcd1.print(selectedTime);
   lcd1.print(" min");
+  Serial.print("Tempo selecionado: ");
+  Serial.print(selectedTime);
+  Serial.println(" minutos");
   delay(1000);
 
   unsigned long endTime = millis() + selectedTime * 60000; // Calcula o tempo final
   while (millis() < endTime) {
     if (digitalRead(btnEndGame) == LOW) {
       endGame(); // Permite encerrar o jogo a qualquer momento
-      return;
+      return; // Sai da função para garantir que o jogo não reinicie
     }
     nextQuestionTimer(endTime); // Executa as operações durante o tempo definido
   }
@@ -247,8 +277,10 @@ void startTimerMode() {
   lcd1.print("Pontos finais:");
   lcd1.setCursor(0, 1);
   lcd1.print(score);
+  Serial.print("Pontuação final: ");
+  Serial.println(score);
   delay(5000); // Mantém a pontuação final na tela por 5 segundos
-  endGame();
+  endGame(); // Chama a função para encerrar o jogo após o tempo esgotar
 }
 
 int selectTimer() {
@@ -258,6 +290,8 @@ int selectTimer() {
       timeSelected = (timeSelected % 5) + 1; // Alterna entre 1 e 5
       lcd1.setCursor(7, 0);
       lcd1.print(timeSelected);
+      Serial.print("Tempo escolhido: ");
+      Serial.println(timeSelected);
       delay(300);
     }
     if (digitalRead(btnSubmit) == LOW) {
@@ -306,6 +340,12 @@ void nextQuestionTimer(unsigned long endTime) {
   lcd1.setCursor(0, 1);
   lcd1.print("Resp: ");
   input = ""; // Reseta a entrada do usuário
+  Serial.print("Operação do modo Timer: ");
+  Serial.print(num1);
+  Serial.print(" ");
+  Serial.print(operation);
+  Serial.print(" ");
+  Serial.println(num2);
 
   waitForInputTimer(endTime);
 }
@@ -316,18 +356,23 @@ void waitForInputTimer(unsigned long endTime) {
       input += "0";
       lcd1.setCursor(6, 1);
       lcd1.print(input);
+      Serial.print("Entrada: ");
+      Serial.println(input);
       delay(300);
     }
     if (digitalRead(btnOne) == LOW) {
       input += "1";
       lcd1.setCursor(6, 1);
       lcd1.print(input);
+      Serial.print("Entrada: ");
+      Serial.println(input);
       delay(300);
     }
     if (digitalRead(btnClear) == LOW) {
       input = "";
       lcd1.setCursor(6, 1);
       lcd1.print("    ");  // Limpa a área da resposta
+      Serial.println("Entrada limpa");
       delay(300);
     }
     if (digitalRead(btnSubmit) == LOW) {
@@ -350,14 +395,18 @@ void waitForInputTimer(unsigned long endTime) {
 
 void checkAnswerTimer() {
   int userAnswer = strtol(input.c_str(), NULL, 2);  // Converte a entrada binária para um número inteiro
+  Serial.print("Resposta do usuário (Timer): ");
+  Serial.println(userAnswer);
   if (userAnswer == correctAnswer) {
     score += 10;  // Incrementa a pontuação
     lcd1.clear();
     lcd1.print("Correto!");
+    Serial.println("Resposta correta!");
     delay(1000);
   } else {
     lcd1.clear();
     lcd1.print("Errado!");
+    Serial.println("Resposta errada!");
     delay(1000);
   }
   updateScore();
@@ -369,6 +418,7 @@ void startMemoryMode() {
   lcd1.clear();
   lcd2.clear();
   lcd1.print("Memoria Mode");
+  Serial.println("Iniciando Modo Memória");
   delay(1000);
 
   int num1, num2;
@@ -404,12 +454,15 @@ void startMemoryMode() {
       memorySequence[memoryIndex++] = String(num1) + " " + operation + " " + String(num2);
       lcd1.setCursor(0, 0);
       lcd1.print(memorySequence[memoryIndex - 1]);
+      Serial.print("Memorizando operação: ");
+      Serial.println(memorySequence[memoryIndex - 1]);
       delay(2000); // Mostra a operação por 2 segundos
     }
   }
 
   lcd1.clear(); // Apaga o display após mostrar as operações
   lcd1.print("Digite a ultima");
+  Serial.println("Aguarde resposta do usuário para última operação");
   waitForMemoryAnswer();
 }
 
@@ -420,31 +473,40 @@ void waitForMemoryAnswer() {
       input += "0";
       lcd1.setCursor(0, 1);
       lcd1.print(input);
+      Serial.print("Entrada: ");
+      Serial.println(input);
       delay(300);
     }
     if (digitalRead(btnOne) == LOW) {
       input += "1";
       lcd1.setCursor(0, 1);
       lcd1.print(input);
+      Serial.print("Entrada: ");
+      Serial.println(input);
       delay(300);
     }
     if (digitalRead(btnClear) == LOW) {
       input = "";
       lcd1.setCursor(0, 1);
       lcd1.print("    ");
+      Serial.println("Entrada limpa");
       delay(300);
     }
     if (digitalRead(btnSubmit) == LOW) {
       int userAnswer = strtol(input.c_str(), NULL, 2);
+      Serial.print("Resposta do usuário (Memória): ");
+      Serial.println(userAnswer);
       if (userAnswer == correctAnswer) {
         lcd1.clear();
         lcd1.print("Correto!");
         score += 10;
+        Serial.println("Resposta correta!");
         delay(1000);
       } else {
         lcd1.clear();
         lcd1.print("Errado!");
         score -= 10;
+        Serial.println("Resposta errada!");
         delay(1000);
       }
       updateScore();
