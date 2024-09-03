@@ -54,14 +54,6 @@
     },
     {
       "type": "wokwi-pushbutton",
-      "id": "btn5",
-      "top": 143.4,
-      "left": -189,
-      "rotate": 90,
-      "attrs": { "color": "green" }
-    },
-    {
-      "type": "wokwi-pushbutton",
       "id": "btn6",
       "top": 143.4,
       "left": -563.4,
@@ -83,6 +75,21 @@
       "left": -400.2,
       "rotate": 90,
       "attrs": { "color": "green" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 370.8,
+      "left": -111.4,
+      "attrs": { "color": "red" }
+    },
+    { "type": "wokwi-led", "id": "led2", "top": 370.8, "left": -169, "attrs": { "color": "red" } },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz1",
+      "top": 290.4,
+      "left": -55.8,
+      "attrs": { "volume": "0.1" }
     }
   ],
   "connections": [
@@ -111,7 +118,13 @@
     [ "btn4:2.r", "bb2:tn.45", "green", [ "v125", "h-96.2" ] ],
     [ "btn4:1.r", "uno:6", "green", [ "v0" ] ],
     [ "lcd2:SDA", "uno:A4", "green", [ "h0" ] ],
-    [ "lcd2:SCL", "uno:A5", "green", [ "h0" ] ]
+    [ "lcd2:SCL", "uno:A5", "green", [ "h0" ] ],
+    [ "led2:C", "uno:4", "green", [ "v0" ] ],
+    [ "led1:C", "uno:5", "green", [ "v0" ] ],
+    [ "led1:A", "bb2:tn.50", "green", [ "v0" ] ],
+    [ "led2:A", "bb2:tn.49", "green", [ "v-86.4", "h-134.4" ] ],
+    [ "bz1:2", "bb2:tn.46", "green", [ "v0" ] ],
+    [ "bz1:1", "uno:3", "green", [ "v0" ] ]
   ],
   "dependencies": {}
 }

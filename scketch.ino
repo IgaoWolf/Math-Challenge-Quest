@@ -14,6 +14,13 @@ const int btnClear = 8;
 const int btnSubmit = 7;
 const int btnEndGame = 6; // Novo botão para encerrar o jogo
 
+// Definição dos pinos dos LEDs
+const int ledCorrect = 4;   // LED para resposta correta
+const int ledIncorrect = 5; // LED para resposta incorreta
+
+// Definição do pino do Buzzer
+const int buzzerPin = 3; // Pino do buzzer
+
 int currentMode = 0; // Variável para armazenar o modo de jogo atual
 unsigned long startTime;
 int score = 0;
@@ -34,6 +41,13 @@ void setup() {
   pinMode(btnClear, INPUT_PULLUP);
   pinMode(btnSubmit, INPUT_PULLUP);
   pinMode(btnEndGame, INPUT_PULLUP); // Configuração do botão de encerrar o jogo
+
+  // Configuração dos pinos dos LEDs
+  pinMode(ledCorrect, OUTPUT);
+  pinMode(ledIncorrect, OUTPUT);
+
+  // Configuração do pino do Buzzer
+  pinMode(buzzerPin, OUTPUT);
 
   // Inicialização dos LCDs
   Wire.begin();  // Inicializa o I2C
@@ -96,6 +110,30 @@ void startGame() {
       startMemoryMode();
       break;
   }
+}
+
+// Função para piscar o LED correto
+void blinkCorrectLED() {
+  digitalWrite(ledCorrect, HIGH);
+  delay(500);  // LED acende por 500ms
+  digitalWrite(ledCorrect, LOW);
+}
+
+// Função para piscar o LED incorreto
+void blinkIncorrectLED() {
+  digitalWrite(ledIncorrect, HIGH);
+  delay(500);  // LED acende por 500ms
+  digitalWrite(ledIncorrect, LOW);
+}
+
+// Função para tocar o som correto
+void playCorrectSound() {
+  tone(buzzerPin, 1000, 300); // Toca a frequência de 1000Hz por 300ms
+}
+
+// Função para tocar o som incorreto
+void playIncorrectSound() {
+  tone(buzzerPin, 500, 300); // Toca a frequência de 500Hz por 300ms
 }
 
 // Implementação do Modo Arcade
@@ -203,13 +241,16 @@ void checkAnswer() {
   Serial.println(userAnswer);
   if (userAnswer == correctAnswer) {
     score += 10;  // Incrementa a pontuação
-    level++;      // Aumenta o nível
+    blinkCorrectLED();  // Pisca o LED correto
+    playCorrectSound(); // Toca o som correto
     lcd1.clear();
     lcd1.print("Correto!");
     Serial.println("Resposta correta!");
     delay(1000);
   } else {
     score -= 10;  // Diminui a pontuação
+    blinkIncorrectLED();  // Pisca o LED incorreto
+    playIncorrectSound(); // Toca o som incorreto
     lcd1.clear();
     lcd1.print("Errado!");
     Serial.println("Resposta errada!");
@@ -425,11 +466,15 @@ void checkAnswerTimer(unsigned long endTime) {
   Serial.println(userAnswer);
   if (userAnswer == correctAnswer) {
     score += 10;  // Incrementa a pontuação
+    blinkCorrectLED();  // Pisca o LED correto
+    playCorrectSound(); // Toca o som correto
     lcd1.clear();
     lcd1.print("Correto!");
     Serial.println("Resposta correta!");
     delay(1000);
   } else {
+    blinkIncorrectLED();  // Pisca o LED incorreto
+    playIncorrectSound(); // Toca o som incorreto
     lcd1.clear();
     lcd1.print("Errado!");
     Serial.println("Resposta errada!");
@@ -547,6 +592,8 @@ void waitForMemoryAnswer() {
       if (userAnswer == correctAnswer) {
         lcd1.clear();
         lcd1.print("Correto!");
+        blinkCorrectLED();  // Pisca o LED correto
+        playCorrectSound(); // Toca o som correto
         score += 10;
         Serial.println("Resposta correta!");
         delay(1000);
@@ -554,6 +601,8 @@ void waitForMemoryAnswer() {
       } else {
         lcd1.clear();
         lcd1.print("Errado!");
+        blinkIncorrectLED();  // Pisca o LED incorreto
+        playIncorrectSound(); // Toca o som incorreto
         score -= 10;
         Serial.println("Resposta errada!");
         delay(1000);
