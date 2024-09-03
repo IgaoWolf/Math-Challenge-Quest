@@ -107,8 +107,6 @@ Este projeto depende das seguintes bibliotecas:
 
 O código completo do projeto está disponível no arquivo `game.ino` neste repositório.
 
-```
-
 ## Dicas de Solução de Problemas
 
 - **Problema:** O display LCD não mostra nada.
@@ -119,8 +117,4 @@ O código completo do projeto está disponível no arquivo `game.ino` neste repo
 ## Créditos
 
 Este projeto foi desenvolvido como parte de um jogo educativo para treinar habilidades matemáticas e de memória, utilizando o Arduino.
-
-## Licença
-
-Este projeto está licenciado sob a licença MIT. Consulte o arquivo `LICENSE` para mais detalhes.
 ```
