@@ -350,37 +350,63 @@ void nextQuestionTimer(unsigned long endTime) {
 }
 
 void waitForInputTimer(unsigned long endTime) {
+  bool buttonZeroPressed = false;
+  bool buttonOnePressed = false;
+  bool buttonClearPressed = false;
+  bool buttonSubmitPressed = false;
+
   while (millis() < endTime) {
-    if (digitalRead(btnZero) == LOW) {
+    // Detecta clique no botão '0'
+    if (digitalRead(btnZero) == LOW && !buttonZeroPressed) {
+      buttonZeroPressed = true; // Marca que o botão foi pressionado
       input += "0";
       lcd1.setCursor(6, 1);
       lcd1.print(input);
       Serial.print("Entrada: ");
       Serial.println(input);
-      delay(300);
+      delay(200); // Pequeno delay para evitar múltiplas entradas
+    } else if (digitalRead(btnZero) == HIGH) {
+      buttonZeroPressed = false; // Reseta quando o botão é liberado
     }
-    if (digitalRead(btnOne) == LOW) {
+
+    // Detecta clique no botão '1'
+    if (digitalRead(btnOne) == LOW && !buttonOnePressed) {
+      buttonOnePressed = true;
       input += "1";
       lcd1.setCursor(6, 1);
       lcd1.print(input);
       Serial.print("Entrada: ");
       Serial.println(input);
-      delay(300);
+      delay(200);
+    } else if (digitalRead(btnOne) == HIGH) {
+      buttonOnePressed = false;
     }
-    if (digitalRead(btnClear) == LOW) {
+
+    // Detecta clique no botão 'Clear'
+    if (digitalRead(btnClear) == LOW && !buttonClearPressed) {
+      buttonClearPressed = true;
       input = "";
       lcd1.setCursor(6, 1);
       lcd1.print("    ");  // Limpa a área da resposta
       Serial.println("Entrada limpa");
-      delay(300);
+      delay(200);
+    } else if (digitalRead(btnClear) == HIGH) {
+      buttonClearPressed = false;
     }
-    if (digitalRead(btnSubmit) == LOW) {
+
+    // Detecta clique no botão 'Submit'
+    if (digitalRead(btnSubmit) == LOW && !buttonSubmitPressed) {
+      buttonSubmitPressed = true;
       checkAnswerTimer(endTime);
-      delay(300);
+      delay(200);
       return;
+    } else if (digitalRead(btnSubmit) == HIGH) {
+      buttonSubmitPressed = false;
     }
+
+    // Detecta clique no botão 'End Game'
     if (digitalRead(btnEndGame) == LOW) {
-      endGame(); // Permite encerrar o jogo durante a espera pela entrada
+      endGame();
       delay(300);
       return;
     }
@@ -389,7 +415,7 @@ void waitForInputTimer(unsigned long endTime) {
     lcd2.setCursor(0, 0);
     lcd2.print("Tempo: ");
     lcd2.print((endTime - millis()) / 1000); // Tempo restante em segundos
-    delay(500); // Reduz a frequência de atualização para não sobrecarregar o LCD
+    delay(100); // Reduz a frequência de atualização para não sobrecarregar o LCD
   }
 }
 
