@@ -1,7 +1,6 @@
-### `README.md`
-
 ```markdown
 # Projeto de Jogo Educativo com Arduino
+```
 
 Este projeto implementa um jogo educativo em um Arduino que testa habilidades matemáticas e de memória. O jogo possui três modos diferentes: Arcade, Timer e Memória. Ele utiliza LEDs e um buzzer para indicar respostas corretas e incorretas, e dois displays LCD para exibir perguntas e a pontuação do jogador.
 
@@ -108,14 +107,6 @@ Este projeto depende das seguintes bibliotecas:
 
 O código completo do projeto está disponível no arquivo `game.ino` neste repositório.
 
-```cpp
-// Código completo do projeto disponível aqui
-// Exemplo simplificado de como acender o LED quando a resposta é correta
-void blinkCorrectLED() {
-  digitalWrite(ledCorrect, HIGH);
-  delay(500);
-  digitalWrite(ledCorrect, LOW);
-}
 ```
 
 ## Dicas de Solução de Problemas
