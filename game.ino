@@ -12,7 +12,7 @@ const int btnZero = 10;
 const int btnOne = 9;
 const int btnClear = 8;
 const int btnSubmit = 7;
-const int btnEndGame = 6; // Novo botão para encerrar o jogo
+const int btnEndGame = 6; 
 
 // Definição dos pinos dos LEDs
 const int ledCorrect = 4;   // LED para resposta correta
@@ -40,7 +40,7 @@ void setup() {
   pinMode(btnOne, INPUT_PULLUP);
   pinMode(btnClear, INPUT_PULLUP);
   pinMode(btnSubmit, INPUT_PULLUP);
-  pinMode(btnEndGame, INPUT_PULLUP); // Configuração do botão de encerrar o jogo
+  pinMode(btnEndGame, INPUT_PULLUP); 
 
   // Configuração dos pinos dos LEDs
   pinMode(ledCorrect, OUTPUT);
